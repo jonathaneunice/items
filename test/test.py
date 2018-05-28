@@ -24,7 +24,7 @@ def test_simple():
     if _PY36:
         assert list(it.keys()) == keys
     else:
-        assert set(it.keys()) = set(keys)
+        assert set(it.keys()) == set(keys)
     if _PY36:
         assert list(it.values()) == values
     else:
