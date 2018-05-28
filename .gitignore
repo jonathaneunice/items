@@ -1,0 +1,11 @@
+.hg*
+.tox/
+__pycache__
+*.pyc
+.pytest_cache
+.coverage
+build/
+dist/
+docs/_build/
+*.egg-info
+*.ipynb
