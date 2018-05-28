@@ -4,6 +4,9 @@ from items import *
 from collections import OrderedDict
 import sys
 
+_PY2 = sys.version_info < (3, 0)
+_PY36 = sys.version_info >= (3, 6)
+
 
 def test_empty():
     it = Item()
@@ -16,8 +19,16 @@ def test_empty():
 
 def test_simple():
     it = Item(a=1, c=22, b=99, r=4.4, d='this')
-    assert list(it.keys()) == 'a c b r d'.split()
-    assert list(it.values()) == [1, 22, 99, 4.4, 'this']
+    keys = 'a c b r d'.split()
+    values =  [1, 22, 99, 4.4, 'this']
+    if _PY36:
+        assert list(it.keys()) == keys
+    else:
+        assert set(it.keys()) = set(keys)
+    if _PY36:
+        assert list(it.values()) == values
+    else:
+        assert set(it.values()) == set(values)
     assert isinstance(it, dict)
     assert isinstance(it, OrderedDict)
 
