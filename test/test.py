@@ -21,3 +21,20 @@ def test_simple():
     assert isinstance(it, dict)
     assert isinstance(it, OrderedDict)
 
+
+def test_Empty():
+    e = Empty
+    assert e.more.f.d is Empty
+    assert e[1].method().there[33][0].no.attributes[99].here is Empty
+
+
+def test_from_tuples():
+    it = Item.from_tuples([('name', 'Susie'),
+                           ('age', 12),
+                           ('hobby', 'science'),
+                           ('friends', ['Dell', 'Bill'])])
+    assert it.name == 'Susie'
+    assert it.age == 12
+    assert it.hobby == 'science'
+    assert it.friends == ['Dell', 'Bill']
+    assert len(it) == 4
