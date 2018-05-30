@@ -141,6 +141,17 @@ Not currently organized for handling recursive data structures. THose do not
 appear in processing JSON, XML, and other common data formats, but still might
 be a nice future extension.
 
+Alternate Construction
+======================
+
+The constructor for ``Item`` is intended to take an existing
+mapping, or a set of keywords. Unlike most ``dict`` subtypes,
+it will not directly convert a primitive list of two-element
+tuples (a historical analog of dictionaries in Python, from
+before the advent of ``OrderedDict``) directly. If you need to
+convert such a typle list into an ``Item``, use the 
+class method ``Item.from_tuples(...)`.
+
 Installation
 ============
 

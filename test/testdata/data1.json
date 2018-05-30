@@ -1,0 +1,30 @@
+[
+    {
+      "name": "Joe",
+      "age": 12,
+      "hobby": "models",
+      "friends": [
+        "Bill",
+        "Akamati"
+      ]
+    },
+    {
+      "name": "Bill",
+      "age": 22,
+      "bobby": "judo",
+      "friends": [
+        "Susie",
+        "Joe"
+      ]
+    },
+    {
+      "name": "Susie",
+      "age": 12,
+      "hobby": "science",
+      "friends": [
+        "Dell",
+        "Bill"
+      ]
+    }
+  ]
+  

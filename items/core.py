@@ -42,11 +42,26 @@ class Item(OrderedDict):
         if kwargs:
             self.update(_item(kwargs))
 
+
     def __getattr__(self, name):
         try:
             return super(Item, self).__getitem__(name)
         except KeyError:
             return Empty
+
+    def __setattr__(self, name, value):
+        """
+        Setting attrs becomes equivalent to setting items.
+        """
+        self[name] = value
+
+    def __delattr__(self, name):
+        try:
+            del self[name]
+        except KeyError:
+            # pass on KeyError for same reason __getattr__ returns Empty if not there:
+            # to be permissive in case of missing attributes / keys
+            pass
         
     def __getitem__(self, key):
         try:
