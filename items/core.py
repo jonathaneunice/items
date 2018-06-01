@@ -14,23 +14,22 @@ def _item(data):
     """
     Private factory function for Item values, especially second and subsequent
     levels beneath the top-level mapping. Here because recursive initializers
-    in Python aren't straightforward (and maybe not really even feasible,
-    since some recursions would not yield Item results, but lists or other
-    data types).
+    in Python aren't really feasible, since some recursions would yield lists
+    or other data types, rather than Item instances.
     """
-    # a mapping / dict type => return an Item instead
+    # data is-a mapping / dict => return an Item instead
     if hasattr(data, 'items'):
         it = Item()
         for k, v in data.items():
             it[k] = _item(v)
         return it
 
-    # list or tuple => return exactly that type
+    # data is-a list or tuple => return exactly that type
     if isinstance(data, (list, tuple)):
         return type(data)(_item(x) for x in data)
 
-    # if not dictionary or sequence, data type is "simple" with respect to
-    # Item creation - whether int, float, complex, str, bytes, etc
+    # otherwise, data type is "simple" with respect to Item creation,
+    # be it int, float, complex, str, bytes, or some other type
     return data
 
 
@@ -71,17 +70,12 @@ class Item(OrderedDict):
             return super(Item, self).__getitem__(key)
         except KeyError:
             return Empty
-
-        # NH explicit action where object.__missing__(self, key) would be called
-
-    # depends on OrderedDict for __delitem__, __setitem__
-
+            # NB explicit action instead of object.__missing__(self, key) method
 
     def __repr__(self):
         clsname = self.__class__.__name__
         kwstr = ', '.join('{0}={1!r}'.format(k, v) for k, v in self.items())
         return '{0}({1})'.format(clsname, kwstr)
-
 
     @classmethod
     def from_tuples(cls, data):
@@ -90,6 +84,8 @@ class Item(OrderedDict):
             k, v = tup
             it[k] = _item(v)
         return it
+
+    # depends on OrderedDict for __delitem__, __setitem__
 
 
 def itemize(iterator):
