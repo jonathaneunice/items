@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from items import *
 from collections import OrderedDict
 import json
 import os
 import sys
+
+from items import *
 
 _PY2 = sys.version_info < (3, 0)
 _PY36 = sys.version_info >= (3, 6)
@@ -35,10 +36,41 @@ def test_simple():
     assert isinstance(it, OrderedDict)
 
 
+def test_from_dict():
+    d = {'this': 99, 'that': 'friends'}
+    it = Item(d)
+    assert it.this == d['this']
+    assert it['this'] == d['this']
+    assert it.that == d['that']
+    assert it['that'] == d['that']
+
+
+def test_missing():
+    it = Item(a=1, b=2)
+    assert it.c is Empty
+    assert it['c'] is Empty
+
+def test_repr():
+    it = Item(a=1, b=2, c='something')
+    if _PY36:
+        assert repr(it) == "Item(a=1, b=2, c='something')"
+    else:
+        r = repr(it)
+        assert r.startswith('Item(')
+        assert r.endswith(')')
+        assert 'a=1' in r
+        assert 'b=2' in r
+        assert "c='something'" in r
+
+
 def test_Empty():
     e = Empty
     assert e.more.f.d is Empty
     assert e[1].method().there[33][0].no.attributes[99].here is Empty
+
+    assert list(Empty) == []
+    for x in Empty:
+        assert False   # should/must never execute
 
 
 def test_from_tuples():
@@ -51,7 +83,7 @@ def test_from_tuples():
     assert it.hobby == 'science'
     assert it.friends == ['Dell', 'Bill']
     assert len(it) == 4
-    
+
 
 def test_attr_assign():
     it = Item()
@@ -72,16 +104,33 @@ def test_attr_del():
     assert it.b == Empty
     assert len(it) == 1
     del it.a
+    assert it.a == Empty
     assert len(it) == 0
     del it.a
     assert len(it) == 0
 
+def test_itemize():
+    things = [ {'a': 1}, {'a': 7} ]
+    for t in itemize(things):
+        assert isinstance(t, Item)
+        assert t.a == 1 or t.a == 7
+
+def test_itemize_all():
+    things = [ {'a': 1}, {'a': 7} ]
+    t_all = itemize_all(things)
+    assert isinstance(t_all, list)
+    assert len(t_all) == 2
+    assert t_all[0].a == 1
+    assert t_all[1].a == 7
+    assert t_all[1].other is Empty
 
 def test_composite_1():
+    """
+    Read a JSON file, and ensure it has the same structure as Items as it
+    does in a native, non-attribute-accessible structure using OrderedDict
+    """
     datadir, _ = os.path.split(__file__)
     datapath = os.path.join(datadir, 'testdata', 'data1.json')
-    print(datadir)
-    print(datapath)
     with open(datapath) as f:
         rawjson = f.read()
         data_i = json.loads(rawjson, object_pairs_hook=Item.from_tuples)
@@ -89,6 +138,5 @@ def test_composite_1():
     for x, y in zip(data_i, data_o):
         assert list(x.keys()) == list(y.keys())
         assert list(x.values()) == list(y.values())
-        
 
-    
+

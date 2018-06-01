@@ -91,12 +91,18 @@ For example, in parsing JSON, ``None`` is returned from JSON's ``null`` value.
 
 ``Empty`` objects are infinitely dereferenceable. No matter how many levels of indirection, 
 they always just hand back themselves--the same gentle "nothing here, but no exceptions
-raised" behavior.
+raised" behavior. You can also iterate over an ``Empty``--it will simply iterate zero times.
+This neatly avoids the common ``TypeError: 'NoneType' object is not iterable``
+error messages in instances where a value can be a list--or ``None`` if the list is not
+present.
 
 .. code-block:: python
 
     e = Empty
     assert e[1].method().there[33][0].no.attributes[99].here is Empty
+
+    for x in Empty:
+        print('hey!')     # never prints, because no such iterations occur
 
 For more on the background of ``Empty``, see the [nulltype](https://pypi.org/project/nulltype/)
 module. A typical use would be:
