@@ -7,6 +7,7 @@ import sys
 
 from items import *
 
+
 _PY2 = sys.version_info < (3, 0)
 _PY36 = sys.version_info >= (3, 6)
 
@@ -109,11 +110,13 @@ def test_attr_del():
     del it.a
     assert len(it) == 0
 
+
 def test_itemize():
     things = [ {'a': 1}, {'a': 7} ]
     for t in itemize(things):
         assert isinstance(t, Item)
         assert t.a == 1 or t.a == 7
+
 
 def test_itemize_all():
     things = [ {'a': 1}, {'a': 7} ]
@@ -123,6 +126,7 @@ def test_itemize_all():
     assert t_all[0].a == 1
     assert t_all[1].a == 7
     assert t_all[1].other is Empty
+
 
 def test_composite_1():
     """

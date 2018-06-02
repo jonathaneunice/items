@@ -14,7 +14,7 @@ def lines(text):
 
 setup(
     name='items',
-    version='0.5.2',
+    version='0.5.3',
     author='Jonathan Eunice',
     author_email='jonathan.eunice@gmail.com',
     description='Attribute accessible dicts and collections thereof',

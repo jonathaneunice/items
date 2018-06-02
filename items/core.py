@@ -1,13 +1,10 @@
 import sys
 from collections import OrderedDict
-from nulltype import NullType
+from nulltype import Empty
 
 __all__ = 'Empty Item itemize itemize_all'.split()
 
 _PY2 = sys.version_info[0] == 2
-
-
-Empty = NullType('Empty')
 
 
 def _item(data):
