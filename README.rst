@@ -29,7 +29,7 @@ Attribute-accessible dictonaries are the most convenient way to access
 dictionaries and other mappings in many algorithms. ``item.name`` is more
 readable and concise than ``item['name']``. Having attribute access often is
 the difference between being able to easily de-reference a component of
-```item`` directly and deciding to store that attribute in a completely
+``item`` directly and deciding to store that attribute in a completely
 separate variable for clarity (``item_name = item['name']``).
 
 In traversing data structures from XML, JSON, and other typically-nested data
@@ -79,7 +79,7 @@ especially in exploratory and data-cleanup tasks. Whatever overhead there is is
 more than made up for by the programming and debugging clarity of not having
 keys occur in random locations.
 
-``Item``s are also permissive, in a way that ``dict`` and its variants often
+``Item`` s are also permissive, in a way that ``dict`` and its variants often
 are not: If you access ``item.arbitary_attribute`` where the attribute does not
 exist, you do not raise a ``KeyError`` as you might expect from normal Python
 dictionaries. Instead you get back ``Empty``, a designated, false-y value
@@ -106,8 +106,8 @@ where a value can be a list--or ``None`` if the list is not present.
     for x in Empty:
         print('hey!')     # never prints, because no such iterations occur
 
-For more on the background of ``Empty``, see the [nulltype](https://pypi.org/project/nulltype/)
-module. A typical use would be:
+For more on the background of ``Empty``, see the `nulltype <https://pypi.org/project/nulltype/>`_
+module. A typical use would be::
 
 .. code-block:: python
 
@@ -135,11 +135,12 @@ parsed. Take steps to return ordered mappings from them.
     # YAML module that will load into OrderedDict instances, which can then
     # be easily converted to Item instances; based on default PyYAML
     import oyaml as yaml
-    items = itemize_all(yaml.load(data))
+    data = itemize_all(yaml.load(rawyaml))
 
     # modified call to json.load or json.loads to preserve order by instantiating
     # Item instances rather than dict
-    items = json.loads(data, object_pairs_hook=Item.from_tuples)
+    import json
+    data = json.loads(rawjson, object_pairs_hook=Item)
 
 Recursion
 =========
@@ -147,16 +148,6 @@ Recursion
 Not currently organized for handling recursive data structures. THose do not
 appear in processing JSON, XML, and other common data formats, but still might
 be a nice future extension.
-
-Alternate Construction
-======================
-
-The constructor for ``Item`` is intended to take an existing mapping, or a set
-of keywords. Unlike most ``dict`` subtypes, it will not directly convert a
-primitive list of two-element tuples (a historical analog of dictionaries in
-Python, from before the advent of ``OrderedDict``) directly. If you need to
-convert such a typle list into an ``Item``, use the class method
-``Item.from_tuples(...)``.
 
 Installation
 ============

@@ -37,7 +37,8 @@ class Item(OrderedDict):
     def __init__(self, a_dict=None, **kwargs):
         super(Item, self).__init__()
         if a_dict:
-            for k, v in a_dict.items():
+            items = a_dict if isinstance(a_dict, list) else a_dict.items()
+            for k, v in items:
                 self[k] = _item(v)
         if kwargs:
             self.update(_item(kwargs))
@@ -73,14 +74,6 @@ class Item(OrderedDict):
         clsname = self.__class__.__name__
         kwstr = ', '.join('{0}={1!r}'.format(k, v) for k, v in self.items())
         return '{0}({1})'.format(clsname, kwstr)
-
-    @classmethod
-    def from_tuples(cls, data):
-        it = cls()
-        for tup in data:
-            k, v = tup
-            it[k] = _item(v)
-        return it
 
     # depends on OrderedDict for __delitem__, __setitem__
 

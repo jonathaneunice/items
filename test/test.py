@@ -4,6 +4,7 @@ from collections import OrderedDict
 import json
 import os
 import sys
+import pytest
 
 from items import *
 
@@ -75,15 +76,23 @@ def test_Empty():
 
 
 def test_from_tuples():
-    it = Item.from_tuples([('name', 'Susie'),
-                           ('age', 12),
-                           ('hobby', 'science'),
-                           ('friends', ['Dell', 'Bill'])])
+    it = Item([('name', 'Susie'),
+               ('age', 12),
+               ('hobby', 'science'),
+               ('friends', ['Dell', 'Bill'])])
     assert it.name == 'Susie'
     assert it.age == 12
     assert it.hobby == 'science'
     assert it.friends == ['Dell', 'Bill']
     assert len(it) == 4
+
+
+    with pytest.raises(ValueError):
+        it2 = Item([('name', 'Susie'),
+                    ('age', 12, 33),        # unbalanced
+                    ('hobby', 'science'),
+                    ('friends', ['Dell', 'Bill'])])
+        Item(it2)
 
 
 def test_attr_assign():
@@ -137,7 +146,7 @@ def test_composite_1():
     datapath = os.path.join(datadir, 'testdata', 'data1.json')
     with open(datapath) as f:
         rawjson = f.read()
-        data_i = json.loads(rawjson, object_pairs_hook=Item.from_tuples)
+        data_i = json.loads(rawjson, object_pairs_hook=Item)
         data_o = json.loads(rawjson, object_pairs_hook=OrderedDict)
     for x, y in zip(data_i, data_o):
         assert list(x.keys()) == list(y.keys())
