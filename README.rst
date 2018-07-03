@@ -102,19 +102,19 @@ where a value can be a list--or ``None`` if the list is not present.
 
     e = Empty
     assert e[1].method().there[33][0].no.attributes[99].here is Empty
-
     for x in Empty:
         print('hey!')     # never prints, because no such iterations occur
 
 For more on the background of ``Empty``, see the `nulltype <https://pypi.org/project/nulltype/>`_
-module. A typical use would be::
+module. A typical use would be:
 
 .. code-block:: python
 
     for item in itemize(data):
         if item.name:
-            # if there is a name attribute, it's processed here
-        # if not, no problem; processing just continues here
+            process(item)
+
+Items that lack names are simply not processed.
 
 The more nested, complex, and irregular your data structures, the
 more valueable this becomes.
@@ -142,10 +142,10 @@ parsed. Take steps to return ordered mappings from them.
     import json
     data = json.loads(rawjson, object_pairs_hook=Item)
 
-Recursion
-=========
+Cycles
+======
 
-Not currently organized for handling recursive data structures. THose do not
+Not currently organized for handling cyclic data structures. Those do not
 appear in processing JSON, XML, and other common data formats, but still might
 be a nice future extension.
 
