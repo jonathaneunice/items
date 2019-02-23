@@ -212,3 +212,11 @@ and ``coverage``. Then run one of these commands::
     tox                # normal run - speed optimized
     tox -e py37        # run for a specific version only
     tox -c toxcov.ini  # run full coverage tests
+
+Notes
+=====
+
+* Does not work on Python 2. Should work on Python 3 prior to 3.6, but not guaranteed.
+  Testing more difficult given different dictionary ordering rules prior to 3.6.
+  Since items intended as forward-looking module, not currently worth energy to retrofit
+  to archaic dialects.
