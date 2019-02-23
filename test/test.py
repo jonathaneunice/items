@@ -126,7 +126,13 @@ def test_named_tuple():
     assert n.a == 1
     assert n.b == 2
     assert n.c == 3
-    assert Item(n) == Item(a=1, b=2, c=3)
+    ni = Item(n)
+    assert ni.a == 1
+    assert ni.b == 2
+    assert ni.c == 3
+    assert set(ni.keys()) == set(['a', 'b', 'c'])
+    # this verbose test statement due to Python 3.5 not having static dict
+    # item ordering
 
 
     d = { 'first': 1, 'n': n}
@@ -146,6 +152,8 @@ def test_named_tuple():
     assert di.n.b == 2
     assert di.n.c == 3
     assert di.n.d == 'ddd'
+    assert set(di.keys()) == set(['first', 'n', 'two'])
+    assert set(di.n.keys()) == set('abcd')
 
 
 def test_itemize():
