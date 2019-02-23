@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 import json
 import os
 import sys
@@ -120,11 +120,54 @@ def test_attr_del():
     assert len(it) == 0
 
 
+def test_named_tuple():
+    NT = namedtuple('NT', 'a b c')
+    n = NT(1, 2, 3)
+    assert n.a == 1
+    assert n.b == 2
+    assert n.c == 3
+    assert Item(n) == Item(a=1, b=2, c=3)
+
+
+    d = { 'first': 1, 'n': n}
+    di = Item(d)
+    print(di)
+    assert di.first == 1
+    assert di.n.a == 1
+    assert di.n.b == 2
+    assert di.n.c == 3
+
+    di.two = 'two'
+    di.n.a = 100
+    di.n.d = 'ddd'
+    assert di.first == 1
+    assert di.two == 'two'
+    assert di.n.a == 100
+    assert di.n.b == 2
+    assert di.n.c == 3
+    assert di.n.d == 'ddd'
+
+
 def test_itemize():
     things = [ {'a': 1}, {'a': 7} ]
     for t in itemize(things):
         assert isinstance(t, Item)
         assert t.a == 1 or t.a == 7
+
+
+def test_itemize_non_dict():
+    assert itemize_all([4, 3], 'a') == [Item(a=4), Item(a=3)]
+    assert itemize_all([(1, 2), (4, 5)], 'a b') == [Item(a=1, b=2), Item(a=4, b=5)]
+
+    # skipping some tail members doesn't cause problems
+    assert itemize_all([(1, 2, 3), (4, 5, 6), (7, 8, 9)], 'a b c') == \
+            [Item(a=1, b=2, c=3), Item(a=4, b=5, c=6), Item(a=7, b=8, c=9)]
+    assert itemize_all([(1, 2, 3), (4, 5), (7, 8, 9)], 'a b c') == \
+            [Item(a=1, b=2, c=3), Item(a=4, b=5), Item(a=7, b=8, c=9)]
+    assert itemize_all([(1, 2, 3), (4, ), (7, 8, 9)], 'a b c') == \
+            [Item(a=1, b=2, c=3), Item(a=4), Item(a=7, b=8, c=9)]
+    assert itemize_all([(1, 2, 3), 4, (7, 8, 9)], 'a b c') == \
+            [Item(a=1, b=2, c=3), Item(a=4), Item(a=7, b=8, c=9)]  
 
 
 def test_itemize_all():
